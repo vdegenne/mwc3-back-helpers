@@ -1,6 +1,7 @@
 {
-	"name": "material-3-back-helpers",
+	"name": "mwc3-back-helpers",
 	"description": "Small set of modules to help building tools around MWC framework.",
+	"version": "0.0.1",
 	"type": "module",
 	"main": "./lib/index.js",
 	"module": "./lib/index.js",
