@@ -16,23 +16,45 @@
 	"devDependencies": {
 		"@changesets/cli": "^2.27.1",
 		"@material/web": "^1.1.1",
+		"@types/node": "^20.11.0",
+		"tsx": "^4.7.0",
 		"typescript": "^5.3.3",
 		"wireit": "^0.14.3"
 	},
 	"scripts": {
 		"build": "wireit",
+		"build:imports-map": "wireit",
 		"prepublishOnly": "changeset version"
 	},
 	"wireit": {
-		"build": "tsc --pretty",
-		"clean": "if-file-deleted",
-		"files": [
-			"tsconfig.json",
-			"src"
-		],
-		"output": [
-			"lib"
-		]
+		"build": {
+			"dependencies": [
+				"build:ts"
+			]
+		},
+		"build:ts": {
+			"command": "tsc --pretty",
+			"dependencies": [
+				"build:imports-map"
+			],
+			"clean": "if-file-deleted",
+			"files": [
+				"tsconfig.json",
+				"src"
+			],
+			"output": [
+				"lib"
+			]
+		},
+		"build:imports-map": {
+			"command": "node --import tsx/esm ./scripts/generate-imports-map.ts",
+			"files": [
+				"./scripts/generate-imports-map.js"
+			],
+			"output": [
+				"./src/md-elements-imports-map.ts"
+			]
+		}
 	},
 	"files": [
 		"/lib",
