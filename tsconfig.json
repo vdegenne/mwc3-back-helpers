@@ -7,6 +7,9 @@
 		"useDefineForClassFields": false,
 		"experimentalDecorators": true,
 		"outDir": "lib",
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
 		"types": []
 	},
 	"include": ["./src/**/*.ts"]
