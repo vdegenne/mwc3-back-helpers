@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "NodeNext",
+		"strict": true,
+		"useDefineForClassFields": false,
+		"experimentalDecorators": true,
+		"outDir": "lib",
+		"types": []
+	},
+	"include": ["./src/**/*.ts"]
+}
