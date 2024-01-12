@@ -1,5 +1,36 @@
 {
-  "devDependencies": {
-    "typescript": "^5.3.3"
-  }
+	"name": "material-3-back-helpers",
+	"description": "Small set of modules to help building tools around MWC framework.",
+	"type": "module",
+	"main": "./lib/index.js",
+	"module": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./lib/index.js",
+			"default": "./lib/index.js",
+			"types": "./lib/index.d.ts"
+		}
+	},
+	"devDependencies": {
+		"typescript": "^5.3.3"
+	},
+	"scripts": {
+		"build": "wireit"
+	},
+	"wireit": {
+		"build": "tsc --pretty",
+		"clean": "if-file-deleted",
+		"files": [
+			"tsconfig.json",
+			"src"
+		],
+		"output": [
+			"lib"
+		]
+	},
+	"files": [
+		"/lib",
+		"!/lib/test"
+	]
 }
