@@ -67,7 +67,6 @@
 			"files": [
 				"./scripts/generate-codepoint-docs.ts"
 			],
-			"#comment": "// TODO: add output field",
 			"output": [
 				".mdicon"
 			]
