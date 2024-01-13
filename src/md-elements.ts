@@ -18,12 +18,19 @@ export function pruneFakeElements(elements: string[]) {
  * Takes a content and returns all existing md-* elements found inside.
  *
  * @argument content Content to analyze.
- * @argument stripComments Whether to strip content from the content or not.
+ * @argument includeComments Whether to strip comment from the content or not.
  */
-export function findElementsFromContent(content: string, stripComments = true) {
+export function findElementsFromContent(
+	content: string,
+	includeComments = false
+) {
 	const elementsSet = new Set<string>();
 
-	const matches = matchAllFromContent(content, MD_ELEMENT_REGEX, stripComments);
+	const matches = matchAllFromContent(
+		content,
+		MD_ELEMENT_REGEX,
+		includeComments
+	);
 
 	for (const match of matches) {
 		elementsSet.add(match[1]);
@@ -40,15 +47,39 @@ export function findElementsFromContent(content: string, stripComments = true) {
  * corresponding file.
  *
  * @argument filepath Path of the file to analyze.
- * @argument stripComments Whether to strip content from the content or not.
+ * @argument includeComments Whether to strip comment from the content or not.
  */
 export async function findElementsFromFile(
 	filepath: string,
-	stripComments = true
+	includeComments = false
 ) {
-	if (!existsSync(filepath)) {
-		return undefined;
-	}
 	const content = (await readFile(filepath)).toString();
-	return findElementsFromContent(content, stripComments);
+	return findElementsFromContent(content, includeComments);
+}
+/**
+ * Takes an array of files and returns all existing md-* elements found inside the
+ * corresponding files.
+ *
+ * @argument filepaths Array of files to analyze.
+ * @argument includeComments Whether to strip comment from the content or not.
+ */
+export async function findElementsFromFiles(
+	filepaths: string[],
+	includeComments = false
+) {
+	const elements = await Promise.all(
+		filepaths.map(
+			(filepath) =>
+				new Promise(async (resolve, reject) => {
+					try {
+						resolve(await findElementsFromFile(filepath, includeComments));
+					} catch (error) {
+						reject(error);
+					}
+				})
+		)
+	);
+
+	// Return flatten and unified.
+	return [...new Set(elements.flat())];
 }

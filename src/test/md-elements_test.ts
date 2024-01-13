@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {
 	MdElementsImportsMap,
 	findElementsFromContent,
+	findElementsFromFiles,
 	pruneFakeElements,
 } from '../md-elements.js';
 
@@ -74,7 +75,7 @@ describe('md-elements module', () => {
           <!-- <md-chip-set></md-chip-set> -->
           <md-circular-progress></md-circular-progress>
           `;
-			const elements = findElementsFromContent(input, false);
+			const elements = findElementsFromContent(input, true);
 
 			expect(elements.length).to.equal(4);
 			expect(elements).to.deep.equal([
@@ -93,6 +94,47 @@ describe('md-elements module', () => {
 
 			expect(elements.length).to.equal(1);
 			expect(elements[0]).to.equal('md-icon');
+		});
+	});
+
+	describe('findElementsFromFiles', () => {
+		it("throws if some files don't exist", async () => {
+			let err: Error | undefined;
+			try {
+				await findElementsFromFiles(['non-existing-file']);
+			} catch (error: any) {
+				err = error as Error;
+			}
+
+			expect(err).to.be.an('error');
+			expect(err!.message).to.contain('ENOENT');
+		});
+
+		it('returns elements from files', async () => {
+			const elements = await findElementsFromFiles([
+				'./fixtures/src/a-element.js',
+				'./fixtures/src/b-element.js',
+			]);
+
+			expect(elements.length).to.equal(3);
+			expect(elements).to.deep.equal(['md-icon-button', 'md-icon', 'md-fab']);
+		});
+
+		it('can analyze comments', async () => {
+			const elements = await findElementsFromFiles(
+				['./fixtures/src/a-element.js', './fixtures/src/b-element.js'],
+				true
+			);
+
+			expect(elements.length).to.equal(6);
+			expect(elements).to.deep.equal([
+				'md-divider',
+				'md-icon-button',
+				'md-icon',
+				'md-chip-set',
+				'md-text-button',
+				'md-fab',
+			]);
 		});
 	});
 });

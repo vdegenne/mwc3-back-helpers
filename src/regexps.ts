@@ -16,10 +16,10 @@ export const MD_ICON_REGEX =
 export function matchAllFromContent(
 	content: string,
 	regexp: RegExp,
-	stripComments = true
+	includeComments = false
 ) {
 	regexp = new RegExp(regexp, 'g');
-	if (stripComments) {
+	if (!includeComments) {
 		content = stripCommentsFromContent(content);
 	}
 	return content.matchAll(regexp);
@@ -28,12 +28,12 @@ export function matchAllFromContent(
 export async function matchAllFromFile(
 	filepath: string,
 	regexp: RegExp,
-	stripComments = true
+	includeComments = false
 ) {
 	if (!existsSync(filepath)) {
 		return undefined;
 	}
 
 	const content = (await readFile(filepath)).toString('utf8');
-	return matchAllFromContent(content, regexp, stripComments);
+	return matchAllFromContent(content, regexp, includeComments);
 }
