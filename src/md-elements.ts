@@ -1,5 +1,7 @@
 import {MdElementsImportsMap} from './md-elements-imports-map.js';
 import {MD_ELEMENT_REGEX, matchAllFromContent} from './regexps.js';
+import {existsSync} from 'node:fs';
+import {readFile} from 'node:fs/promises';
 
 export {MdElementsImportsMap, MD_ELEMENT_REGEX};
 
@@ -12,6 +14,12 @@ export function pruneFakeElements(elements: string[]) {
 	return elements.filter((el) => availableElements.includes(el));
 }
 
+/**
+ * Takes a content and returns all existing md-* elements found inside.
+ *
+ * @argument content Content to analyze.
+ * @argument stripComments Whether to strip content from the content or not.
+ */
 export function findElementsFromContent(content: string, stripComments = true) {
 	const elementsSet = new Set<string>();
 
@@ -25,4 +33,22 @@ export function findElementsFromContent(content: string, stripComments = true) {
 	elements = pruneFakeElements(elements);
 
 	return elements;
+}
+
+/**
+ * Takes a filepath and returns all existing md-* elements found inside the
+ * corresponding file.
+ *
+ * @argument filepath Path of the file to analyze.
+ * @argument stripComments Whether to strip content from the content or not.
+ */
+export async function findElementsFromFile(
+	filepath: string,
+	stripComments = true
+) {
+	if (!existsSync(filepath)) {
+		return undefined;
+	}
+	const content = (await readFile(filepath)).toString();
+	return findElementsFromContent(content, stripComments);
 }
