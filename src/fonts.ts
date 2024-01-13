@@ -4,6 +4,8 @@ import {join} from 'path';
 import {mkdir} from './utils.js';
 import {existsSync} from 'node:fs';
 
+export type CodePointsMap = {[iconName: string]: string};
+
 export const CodePointUris: {[key in Variant]: string} = {
 	outlined: 'Material+Symbols+Outlined',
 	rounded: 'Material+Symbols+Rounded',
@@ -127,4 +129,15 @@ export function codePointDocumentExists(
 			`Error trying to check file existence "${variant}.codepoints" (error: ${error})`
 		);
 	}
+}
+
+/**
+ * Take a content representing the document and returns a codepoints map.
+ */
+export function createCodePointsMapFromDocument(
+	document: string
+): CodePointsMap {
+	return Object.fromEntries(
+		document.split('\n').map((line) => line.split(' '))
+	);
 }

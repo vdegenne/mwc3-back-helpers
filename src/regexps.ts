@@ -7,7 +7,7 @@ export const MATERIAL_ALL_IMPORT_REGEX =
 
 export const MD_ELEMENT_REGEX = /<(md-[\w-]+)/;
 export const MD_ICON_REGEX =
-	/(<md-icon(?<!=>)[\s\S]*?>)\s*([a-z_]+)\s*(<\/md-icon\s*>)/;
+	/(<md-icon(?<!=>)[\s\S]*?>)\s*([0-9a-z_]+)\s*(<\/md-icon\s*>)/;
 
 /**
  * General regexp function that returns the result of `matchAll` on the

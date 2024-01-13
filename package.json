@@ -63,11 +63,14 @@
 			]
 		},
 		"build:codepoint-docs": {
-			"command": "node --import tsx/esm ./scripts/download-codepoint-docs.ts",
+			"command": "node --import tsx/esm ./scripts/generate-codepoint-docs.ts",
 			"files": [
-				"./scripts/download-codepoint-docs.ts"
+				"./scripts/generate-codepoint-docs.ts"
 			],
-			"#comment": "// TODO: add output field"
+			"#comment": "// TODO: add output field",
+			"output": [
+				".mdicon"
+			]
 		},
 		"test": {
 			"command": "mocha lib/test/**/*_test.js",

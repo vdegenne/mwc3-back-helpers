@@ -1,4 +1,6 @@
+import {CodePointsMap} from './fonts.js';
 import {MD_ICON_REGEX, matchAllFromContent} from './regexps.js';
+import {stripCommentsFromContent} from './utils.js';
 
 export {MD_ICON_REGEX};
 
@@ -23,4 +25,23 @@ export function findIconNamesFromContent(
 	}
 
 	return Array.from(namesSet);
+}
+
+export function replaceIconNamesWithCodePoints(
+	content: string,
+	codePointsMap: CodePointsMap,
+	includeComments = false
+) {
+	const regexp = new RegExp(MD_ICON_REGEX, 'g');
+
+	if (!includeComments) {
+		content = stripCommentsFromContent(content);
+	}
+
+	content = content.replaceAll(regexp, (_, opening, name, closing) => {
+		const codepoint = codePointsMap[name];
+		return `${opening}${codepoint ? `&#x${codepoint};` : name}${closing}`;
+	});
+
+	return content;
 }

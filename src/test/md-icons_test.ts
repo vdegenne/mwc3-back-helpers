@@ -1,5 +1,9 @@
 import {expect} from 'chai';
-import {findIconNamesFromContent} from '../md-icons.js';
+import {
+	findIconNamesFromContent,
+	replaceIconNamesWithCodePoints,
+} from '../md-icons.js';
+import {OutlinedCodePointsMap} from '../codepoints-maps.js';
 
 const doSomething = () => {
 	/*do nothing*/
@@ -32,6 +36,7 @@ describe('md-icons module', () => {
 			'arrow_back',
 		]);
 	});
+
 	it('extracts icon names from comments', async () => {
 		const iconNames = findIconNamesFromContent(content, true);
 		expect(iconNames).to.deep.equal([
@@ -44,5 +49,87 @@ describe('md-icons module', () => {
 			'test',
 			'asdf',
 		]);
+	});
+
+	it('replaces icon names with codepoints', async () => {
+		const map = OutlinedCodePointsMap;
+
+		let content = '<md-icon>10k</md-icon>';
+		let result = replaceIconNamesWithCodePoints(content, map);
+		expect(result).to.equal('<md-icon>&#xe951;</md-icon>');
+
+		content = '<md-icon>unknown_name</md-icon>';
+		result = replaceIconNamesWithCodePoints(content, map);
+		expect(result).to.equal('<md-icon>unknown_name</md-icon>');
+
+		content = '<md-icon>settings</md-icon><md-icon>delete</md-icon>';
+		result = replaceIconNamesWithCodePoints(content, map);
+		expect(result).to.equal(
+			'<md-icon>&#xe8b8;</md-icon><md-icon>&#xe92e;</md-icon>'
+		);
+
+		content = `
+<md-icon>  settings</md-icon>
+<md-icon
+>  delete    </md-icon
+>`;
+		result = replaceIconNamesWithCodePoints(content, map);
+		expect(result).to.equal(
+			`
+<md-icon>&#xe8b8;</md-icon>
+<md-icon
+>&#xe92e;</md-icon
+>`
+		);
+
+		content = `
+<md-icon>  settings</md-icon>
+// <md-icon>remove_red_eyes</md-icon>
+<md-icon>  delete    </md-icon>
+/* <md-icon>10k</md-icon> */
+<md-icon>sell</md-icon>
+/**
+ * <md-icon>lock_person</md-icon>
+ */
+<md-icon>lock</md-icon>
+<!-- <md-icon>arrow_left</md-icon> -->
+<!-- <md-icon>non_existing_name</md-icon> -->
+<md-icon>arrow_back</md-icon>
+`;
+		result = replaceIconNamesWithCodePoints(content, map);
+
+		expect(result).to.equal(
+			`
+<md-icon>&#xe8b8;</md-icon>
+
+<md-icon>&#xe92e;</md-icon>
+
+<md-icon>&#xf05b;</md-icon>
+
+<md-icon>&#xe899;</md-icon>
+
+
+<md-icon>&#xe5c4;</md-icon>
+`
+		);
+
+		result = replaceIconNamesWithCodePoints(content, map, true);
+
+		expect(result).to.equal(
+			`
+<md-icon>&#xe8b8;</md-icon>
+// <md-icon>remove_red_eyes</md-icon>
+<md-icon>&#xe92e;</md-icon>
+/* <md-icon>&#xe951;</md-icon> */
+<md-icon>&#xf05b;</md-icon>
+/**
+ * <md-icon>&#xf8f3;</md-icon>
+ */
+<md-icon>&#xe899;</md-icon>
+<!-- <md-icon>&#xe5de;</md-icon> -->
+<!-- <md-icon>non_existing_name</md-icon> -->
+`
+<md-icon>&#xe5c4;</md-icon>
+		);
 	});
 });

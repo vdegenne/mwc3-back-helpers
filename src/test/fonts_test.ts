@@ -4,6 +4,7 @@ import {
 	downloadCodePointDocuments,
 	loadOrDownloadCodePointDocuments,
 	fetchAllRawCodePointDocuments,
+	createCodePointsMapFromDocument,
 } from '../fonts.js';
 import {existsSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
@@ -88,5 +89,11 @@ describe('fonts.ts module', () => {
 
 			expect(documents.sharp).to.contains('10k e951');
 		});
+	});
+
+	describe('creates codepoints map from document', async () => {
+		const {documents} = await loadOrDownloadCodePointDocuments();
+		const map = await createCodePointsMapFromDocument(documents.outlined);
+		expect(map['10k']).to.equal('e951');
 	});
 });
