@@ -1,15 +1,14 @@
 import {MD_ICON_REGEX, matchAllFromContent} from './regexps.js';
-import {readFile} from 'node:fs/promises';
 
 export {MD_ICON_REGEX};
 
 export enum Variant {
-	OUTLINED = 'Outlined',
-	ROUNDED = 'Rounded',
-	SHARP = 'Sharp',
+	OUTLINED = 'outlined',
+	ROUNDED = 'rounded',
+	SHARP = 'sharp',
 }
 
-// export type VariantValue = (typeof Variant)[keyof typeof Variant];
+export type VariantValue = keyof typeof Variant;
 
 export function findIconNamesFromContent(
 	content: string,
