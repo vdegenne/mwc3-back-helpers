@@ -3,13 +3,11 @@ import {
 	findIconNamesFromContent,
 	replaceIconNamesWithCodePoints,
 } from '../md-icons.js';
-import {OutlinedCodePointsMap} from '../codepoints-maps.js';
-
-const doSomething = () => {
-	/*do nothing*/
-};
+import {CodePointsMap, OutlinedCodePointsMap} from '../codepoints-maps.js';
 
 describe('md-icons module', () => {
+	const doSomething = () => {};
+
 	const content = `
     <md-icon>settings</md-icon>
     <md-icon>settings</md-icon>
@@ -26,6 +24,7 @@ describe('md-icons module', () => {
     <!-- <md-icon>asdf</md-icon> -->
 `;
 
+	// TODO: shouldn't return icon names that don't exist
 	it('extracts icon names from content', async () => {
 		const iconNames = findIconNamesFromContent(content);
 		expect(iconNames).to.deep.equal([
@@ -52,7 +51,7 @@ describe('md-icons module', () => {
 	});
 
 	it('replaces icon names with codepoints', async () => {
-		const map = OutlinedCodePointsMap;
+		const map = CodePointsMap;
 
 		let content = '<md-icon>10k</md-icon>';
 		let result = replaceIconNamesWithCodePoints(content, map);
@@ -128,8 +127,8 @@ describe('md-icons module', () => {
 <md-icon>&#xe899;</md-icon>
 <!-- <md-icon>&#xe5de;</md-icon> -->
 <!-- <md-icon>non_existing_name</md-icon> -->
-`
 <md-icon>&#xe5c4;</md-icon>
+`
 		);
 	});
 });

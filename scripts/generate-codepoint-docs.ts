@@ -27,6 +27,8 @@ async function main() {
 		)};
 export const RoundedCodePointsMap = ${JSON.stringify(RoundedCodePointsMap)};
 export const SharpCodePointsMap = ${JSON.stringify(SharpCodePointsMap)};
+/** General code points map */
+export const CodePointsMap = ${JSON.stringify(OutlinedCodePointsMap)};
 `
 	);
 }
