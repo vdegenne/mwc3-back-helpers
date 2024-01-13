@@ -116,7 +116,7 @@ describe('MD_ICON_REGEX', () => {
 	it('extracts icon name', () => {
 		const input = `<md-icon>settings</md-icon>`;
 
-		const match = input.match(MD_ICON_REGEX)!;
+		const match = MD_ICON_REGEX.exec(input)!;
 		expect(match[2]).to.equal('settings');
 	});
 
