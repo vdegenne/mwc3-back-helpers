@@ -1,6 +1,5 @@
 import {MdElementsImportsMap} from './md-elements-imports-map.js';
 import {MD_ELEMENT_REGEX, matchAllFromContent} from './regexps.js';
-import {existsSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 
 export {MdElementsImportsMap, MD_ELEMENT_REGEX};
