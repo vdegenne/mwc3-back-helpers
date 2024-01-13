@@ -3,7 +3,7 @@ import {
 	MATERIAL_ALL_IMPORT_REGEX,
 	MD_ELEMENT_REGEX,
 	MD_ICON_REGEX,
-} from '../constants.js';
+} from '../regexps.js';
 
 describe('MATERIAL_ALL_IMPORT_REGEXP', () => {
 	it('matches double-quotes imports', () => {

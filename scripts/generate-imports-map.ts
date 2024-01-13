@@ -26,15 +26,11 @@ async function main() {
 		);
 	}
 
+	const stringified = JSON.stringify(importsMap, null, 2);
+
 	await writeFile(
 		'src/md-elements-imports-map.ts',
-		`import {type ImportsMap} from './imports.js';
-
-export const MdElementsImportsMap: ImportsMap = ${JSON.stringify(
-			importsMap,
-			null,
-			2
-		)};`
+		`export const MdElementsImportsMap = ${stringified};`
 	);
 }
 
