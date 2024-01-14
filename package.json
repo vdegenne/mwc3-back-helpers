@@ -1,7 +1,7 @@
 {
 	"name": "mwc3-back-helpers",
 	"description": "Small set of modules to help building tools around MWC framework.",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"type": "module",
 	"main": "./lib/index.js",
 	"module": "./lib/index.js",
@@ -26,6 +26,11 @@
 			"import": "./lib/fonts.js",
 			"default": "./lib/fonts.js",
 			"types": "./lib/fonts.d.ts"
+		},
+		"./regexps.js": {
+			"import": "./lib/regexps.js",
+			"default": "./lib/regexps.js",
+			"types": "./lib/regexps.d.ts"
 		}
 	},
 	"devDependencies": {
