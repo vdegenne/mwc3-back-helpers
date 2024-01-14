@@ -31,6 +31,10 @@ export const SharpCodePointsMap = ${sharpCodePointsMap} as const;
 /** General code points map */
 export const CodePointsMap = ${outlinedCodePointsMap} as const;
 export type MdIconName = keyof typeof CodePointsMap;
+export type CodePoint =
+	| (typeof OutlinedCodePointsMap)[keyof typeof OutlinedCodePointsMap]
+	| (typeof RoundedCodePointsMap)[keyof typeof RoundedCodePointsMap]
+	| (typeof SharpCodePointsMap)[keyof typeof SharpCodePointsMap];
 `.trim() + '\n'
 	);
 }

@@ -3,6 +3,7 @@ import {
 	MATERIAL_ALL_IMPORT_REGEX,
 	MD_ELEMENT_REGEX,
 	MD_ICON_REGEX,
+	SYMBOLS_STYLESHEET_LINK_REGEX,
 } from '../regexps.js';
 
 describe('MATERIAL_ALL_IMPORT_REGEXP', () => {
@@ -173,5 +174,23 @@ describe('MD_ICON_REGEX', () => {
 		expect(match[1]).to.equal('<md-icon>');
 		expect(match[2]).equals('settings');
 		expect(match[3]).to.equal('</md-icon>');
+	});
+});
+
+describe('SYMBOLS_STYLESHEET_LINK_REGEX', () => {
+	it('detects link tag', () => {
+		const html = `
+          <!doctype html>
+          <html>
+            <head>
+              <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">
+            </head>
+          </html>
+          `;
+
+		const match = html.match(SYMBOLS_STYLESHEET_LINK_REGEX)!;
+		expect(match[0]).to.equal(
+			'<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">'
+		);
 	});
 });

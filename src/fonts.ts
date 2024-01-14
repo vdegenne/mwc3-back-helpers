@@ -3,19 +3,26 @@ import {existsSync} from 'node:fs';
 import {readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {mkdir} from './utils.js';
+import type {CodePoint} from './codepoints-maps.js';
 
 export type CodePointsMapType = {[iconName: string]: string};
 
-export const CodePointUris: {[key in Variant]: string} = {
+const FontFamily = {
 	outlined: 'Material+Symbols+Outlined',
 	rounded: 'Material+Symbols+Rounded',
 	sharp: 'Material+Symbols+Sharp',
 } as const;
+export type FontFamilyValue = (typeof FontFamily)[keyof typeof FontFamily];
+export const FontFamilies: {[key in Variant]: FontFamilyValue} = {
+	outlined: FontFamily.outlined,
+	rounded: FontFamily.rounded,
+	sharp: FontFamily.sharp,
+};
 
 export async function fetchRawCodepointDocument(variant: Variant) {
-	let uri = CodePointUris[variant];
-	uri = uri.replaceAll('+', '');
-	const url = `https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/${uri}%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints`;
+	const _family: FontFamilyValue = FontFamilies[variant];
+	const family = _family.replaceAll('+', '');
+	const url = `https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/${family}%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints`;
 	const res = await fetch(url);
 	const text = await res.text();
 	return text;
@@ -140,4 +147,32 @@ export function createCodePointsMapFromDocument(
 	return Object.fromEntries(
 		document.split('\n').map((line) => line.split(' '))
 	);
+}
+
+/**
+ * Construct a URL pointing to a stylesheet that
+ * encapsulates the Symbols font which includes only the
+ * codepoints provided in the arguments.
+ *
+ * `extractSymbolsFontUrlFromStyleSheet` can then be used
+ * to get the fonts location from the stylesheet's content.
+ */
+export function constructSymbolsFontStyleSheetUrl(
+	variant: Variant,
+	codepoints: CodePoint[] = []
+) {
+	let text = codepoints.length ? '&text=' : '';
+	const family = FontFamilies[variant];
+
+	codepoints.forEach((codepoint) => {
+		text += encodeURIComponent(String.fromCharCode(parseInt(codepoint, 16)));
+	});
+
+	return `https://fonts.googleapis.com/css2?family=${family}:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200${text}`;
+}
+
+export function downloadSymbolsFontStyleSheet() {}
+
+export function extractSymbolsFontUrlFromStyleSheet(stylesheet: string) {
+	// Should use a regexp to extract the fonts url
 }
