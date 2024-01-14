@@ -1,4 +1,4 @@
-import {CodePointsMap} from './fonts.js';
+import type {CodePointsMapType} from './fonts.js';
 import {MD_ICON_REGEX, matchAllFromContent} from './regexps.js';
 import {stripCommentsFromContent} from './utils.js';
 
@@ -29,7 +29,7 @@ export function findIconNamesFromContent(
 
 export function replaceIconNamesWithCodePoints(
 	content: string,
-	codePointsMap: CodePointsMap,
+	codePointsMap: CodePointsMapType,
 	includeComments = false
 ) {
 	const regexp = new RegExp(MD_ICON_REGEX, 'g');

@@ -1,7 +1,7 @@
 {
 	"name": "mwc3-back-helpers",
-	"description": "Small set of modules to help building tools around MWC framework.",
-	"version": "0.0.3",
+	"description": "Subset of modules to help building tools around MWC framework.",
+	"version": "0.1.0",
 	"type": "module",
 	"main": "./lib/index.js",
 	"module": "./lib/index.js",
@@ -17,10 +17,20 @@
 			"default": "./lib/md-elements.js",
 			"types": "./lib/md-elements.d.ts"
 		},
+		"./md-elements-imports-map.js": {
+			"import": "./lib/md-elements-imports-map.js",
+			"default": "./lib/md-elements-imports-map.js",
+			"types": "./lib/md-elements-imports-map.d.ts"
+		},
 		"./md-icons.js": {
 			"import": "./lib/md-icons.js",
 			"default": "./lib/md-icons.js",
 			"types": "./lib/md-icons.d.ts"
+		},
+		"./codepoints-maps.js": {
+			"import": "./lib/codepoints-maps.js",
+			"default": "./lib/codepoints-maps.js",
+			"types": "./lib/codepoints-maps.d.ts"
 		},
 		"./fonts.js": {
 			"import": "./lib/fonts.js",

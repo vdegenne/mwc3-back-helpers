@@ -20,7 +20,12 @@ describe('md-elements module', () => {
 	});
 
 	it('can prune fake elements', () => {
-		const elements = ['md-icon', 'md-fake-element', 'md-icon-button', 'fake'];
+		const elements: any[] = [
+			'md-icon',
+			'md-fake-element',
+			'md-icon-button',
+			'fake',
+		];
 		const pruned = pruneFakeElements(elements);
 		expect(pruned).to.deep.equal(['md-icon', 'md-icon-button']);
 	});

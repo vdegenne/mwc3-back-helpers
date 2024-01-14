@@ -29,8 +29,12 @@ async function main() {
 	const stringified = JSON.stringify(importsMap, null, 2);
 
 	await writeFile(
-		'src/md-elements-imports-map.ts',
-		`export const MdElementsImportsMap = ${stringified};`
+		join('src', 'md-elements-imports-map.ts'),
+		`
+export const MdElementsImportsMap = ${stringified} as const;
+/** all available md-* element */
+export type MdElement = keyof typeof MdElementsImportsMap;
+`.trim() + '\n'
 	);
 }
 

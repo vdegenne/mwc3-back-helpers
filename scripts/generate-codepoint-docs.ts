@@ -12,24 +12,26 @@ import {join} from 'node:path';
 async function main() {
 	const {documents} = await loadOrDownloadCodePointDocuments();
 
-	const OutlinedCodePointsMap = createCodePointsMapFromDocument(
-		documents.outlined
+	const outlinedCodePointsMap = JSON.stringify(
+		createCodePointsMapFromDocument(documents.outlined)
 	);
-	const RoundedCodePointsMap = createCodePointsMapFromDocument(
-		documents.rounded
+	const roundedCodePointsMap = JSON.stringify(
+		createCodePointsMapFromDocument(documents.rounded)
 	);
-	const SharpCodePointsMap = createCodePointsMapFromDocument(documents.sharp);
+	const sharpCodePointsMap = JSON.stringify(
+		createCodePointsMapFromDocument(documents.sharp)
+	);
 
 	await writeFile(
 		join('src', 'codepoints-maps.ts'),
-		`export const OutlinedCodePointsMap = ${JSON.stringify(
-			OutlinedCodePointsMap
-		)};
-export const RoundedCodePointsMap = ${JSON.stringify(RoundedCodePointsMap)};
-export const SharpCodePointsMap = ${JSON.stringify(SharpCodePointsMap)};
+		`
+export const OutlinedCodePointsMap = ${outlinedCodePointsMap} as const;
+export const RoundedCodePointsMap = ${roundedCodePointsMap} as const;
+export const SharpCodePointsMap = ${sharpCodePointsMap} as const;
 /** General code points map */
-export const CodePointsMap = ${JSON.stringify(OutlinedCodePointsMap)};
-`
+export const CodePointsMap = ${outlinedCodePointsMap} as const;
+export type MdIconName = keyof typeof CodePointsMap;
+`.trim() + '\n'
 	);
 }
 

@@ -1,6 +1,6 @@
-import {MdElementsImportsMap} from './md-elements-imports-map.js';
+import {MdElement, MdElementsImportsMap} from './md-elements-imports-map.js';
 import {MD_ELEMENT_REGEX, matchAllFromContent} from './regexps.js';
-import {existsSync} from 'node:fs';
+// import {existsSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 
 export {MdElementsImportsMap, MD_ELEMENT_REGEX};
@@ -11,11 +11,12 @@ export {MdElementsImportsMap, MD_ELEMENT_REGEX};
  */
 export function pruneFakeElements(elements: string[]) {
 	const availableElements = Object.keys(MdElementsImportsMap);
-	return elements.filter((el) => availableElements.includes(el));
+	return elements.filter((el) => availableElements.includes(el)) as MdElement[];
 }
 
 /**
  * Takes a content and returns all existing md-* elements found inside.
+ * Pruned and unified.
  *
  * @argument content Content to analyze.
  * @argument includeComments Whether to strip comment from the content or not.
@@ -24,7 +25,7 @@ export function findElementsFromContent(
 	content: string,
 	includeComments = false
 ) {
-	const elementsSet = new Set<string>();
+	const elementsSet = new Set<any>();
 
 	const matches = matchAllFromContent(
 		content,
@@ -36,7 +37,7 @@ export function findElementsFromContent(
 		elementsSet.add(match[1]);
 	}
 
-	let elements = Array.from(elementsSet);
+	let elements: MdElement[] = Array.from(elementsSet);
 	elements = pruneFakeElements(elements);
 
 	return elements;
@@ -45,6 +46,7 @@ export function findElementsFromContent(
 /**
  * Takes a filepath and returns all existing md-* elements found inside the
  * corresponding file.
+ * Pruned and unified.
  *
  * @argument filepath Path of the file to analyze.
  * @argument includeComments Whether to strip comment from the content or not.
@@ -52,13 +54,14 @@ export function findElementsFromContent(
 export async function findElementsFromFile(
 	filepath: string,
 	includeComments = false
-) {
+): Promise<MdElement[]> {
 	const content = (await readFile(filepath)).toString();
 	return findElementsFromContent(content, includeComments);
 }
 /**
  * Takes an array of files and returns all existing md-* elements found inside the
  * corresponding files.
+ * Pruned and unified.
  *
  * @argument filepaths Array of files to analyze.
  * @argument includeComments Whether to strip comment from the content or not.
@@ -81,5 +84,5 @@ export async function findElementsFromFiles(
 	);
 
 	// Return flatten and unified.
-	return [...new Set(elements.flat())];
+	return [...new Set(elements.flat())] as MdElement[];
 }

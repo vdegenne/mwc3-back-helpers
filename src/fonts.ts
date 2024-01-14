@@ -4,7 +4,7 @@ import {readFile, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 import {mkdir} from './utils.js';
 
-export type CodePointsMap = {[iconName: string]: string};
+export type CodePointsMapType = {[iconName: string]: string};
 
 export const CodePointUris: {[key in Variant]: string} = {
 	outlined: 'Material+Symbols+Outlined',
@@ -136,7 +136,7 @@ export function codePointDocumentExists(
  */
 export function createCodePointsMapFromDocument(
 	document: string
-): CodePointsMap {
+): CodePointsMapType {
 	return Object.fromEntries(
 		document.split('\n').map((line) => line.split(' '))
 	);
