@@ -1,8 +1,8 @@
 import {Variant} from './md-icons.js';
-import {readFile, writeFile} from 'node:fs/promises';
-import {join} from 'path';
-import {mkdir} from './utils.js';
 import {existsSync} from 'node:fs';
+import {readFile, writeFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {mkdir} from './utils.js';
 
 export type CodePointsMap = {[iconName: string]: string};
 

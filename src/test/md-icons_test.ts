@@ -3,7 +3,7 @@ import {
 	findIconNamesFromContent,
 	replaceIconNamesWithCodePoints,
 } from '../md-icons.js';
-import {CodePointsMap, OutlinedCodePointsMap} from '../codepoints-maps.js';
+import {CodePointsMap} from '../codepoints-maps.js';
 
 describe('md-icons module', () => {
 	const doSomething = () => {};
