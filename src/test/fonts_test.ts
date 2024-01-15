@@ -6,11 +6,18 @@ import {
 	fetchAllRawCodePointDocuments,
 	createCodePointsMapFromDocument,
 	constructSymbolsFontStyleSheetUrl,
+	downloadSymbolsFontStyleSheet,
+	fetchSymbolsFontStyleSheet,
+	loadOrDownloadSymbolsFontStyleSheet,
+	extractSymbolsFontUrlFromStyleSheet,
+	replaceSymbolsFontUrlInStyleSheet,
+	downloadSymbolsFontFromStyleSheet,
 } from '../fonts.js';
 import {existsSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 import {rm} from '../utils.js';
 import {Variant} from '../md-icons.js';
+import {dirname} from 'node:path';
 
 describe('fonts.ts module', () => {
 	// Uncomment/Comment this set of tests every now and then
@@ -98,7 +105,7 @@ describe('fonts.ts module', () => {
 		expect(map['10k']).to.equal('e951');
 	});
 
-	it('builds symbols font url', () => {
+	it('constructs symbols font stylesheet url', () => {
 		let url = constructSymbolsFontStyleSheetUrl(Variant.OUTLINED, ['efd1']);
 		expect(url).to.equal(
 			'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&text=%EE%BF%91'
@@ -112,5 +119,103 @@ describe('fonts.ts module', () => {
 		expect(url).to.equal(
 			'https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&text=%EE%9C%9C%EF%A2%88%EE%A3%8D'
 		);
+	});
+
+	describe('Material Symbols Stylesheet', () => {
+		const stylesheetPath = '.mdicon/material-symbols.css';
+
+		describe.skip('Pre-fetching', () => {
+			beforeEach(async () => {
+				await rm('.mdicon/material-symbols.css');
+			});
+
+			it('fetches symbols font stylesheet from url', async () => {
+				const stylesheet = await fetchSymbolsFontStyleSheet(Variant.ROUNDED, [
+					'e71c',
+					'f888',
+					'e8cd',
+				]);
+				expect(stylesheet).to.contain('@font-face {');
+				expect(stylesheet).to.contain('Material Symbols Rounded');
+			});
+
+			it('downloads symbols font stylesheet', async () => {
+				expect(existsSync(stylesheetPath)).to.be.false;
+				const stylesheet = await downloadSymbolsFontStyleSheet(
+					Variant.OUTLINED,
+					['e71c', 'f888', 'e8cd']
+				);
+				expect(existsSync(stylesheetPath)).to.be.true;
+				const fileContent = (await readFile(stylesheetPath)).toString();
+				expect(fileContent).to.equal(stylesheet);
+			});
+
+			it('loads locally or downloads', async () => {
+				expect(existsSync(stylesheetPath)).to.be.false;
+				const {downloaded, stylesheet} =
+					await loadOrDownloadSymbolsFontStyleSheet(
+						stylesheetPath,
+						Variant.OUTLINED,
+						['e71c', 'f888', 'e8cd']
+					);
+				expect(downloaded).to.be.true;
+				expect(stylesheet).to.contain('@font-face {');
+
+				const {downloaded: redownloaded, stylesheet: restylesheet} =
+					await loadOrDownloadSymbolsFontStyleSheet(
+						stylesheetPath,
+						Variant.OUTLINED,
+						['e71c', 'f888', 'e8cd']
+					);
+				expect(redownloaded).to.be.false;
+				expect(restylesheet).to.contain('@font-face {');
+				expect(restylesheet).to.equal(stylesheet);
+			});
+		});
+
+		it('extracts Symbols font url from stylesheet', async () => {
+			const {stylesheet} = await loadOrDownloadSymbolsFontStyleSheet(
+				stylesheetPath,
+				Variant.OUTLINED,
+				[]
+			);
+			const fontUrl = extractSymbolsFontUrlFromStyleSheet(stylesheet);
+			expect(fontUrl).to.equal(
+				'https://fonts.gstatic.com/s/materialsymbolsoutlined/v156/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2'
+			);
+		});
+
+		it('replaces Symbols font url with an input', async () => {
+			const {stylesheet} = await loadOrDownloadSymbolsFontStyleSheet(
+				stylesheetPath,
+				Variant.OUTLINED,
+				[]
+			);
+			const output = replaceSymbolsFontUrlInStyleSheet(
+				stylesheet,
+				'./another/uri/to/font.woff'
+			);
+			expect(output).to.contain('url(./another/uri/to/font.woff)');
+		});
+
+		it('downloads font file from stylesheet', async () => {
+			const fontPath = '.mdicon/material-symbols.woff2';
+			const {stylesheet} = await loadOrDownloadSymbolsFontStyleSheet(
+				stylesheetPath,
+				Variant.OUTLINED,
+				[]
+			);
+
+			expect(existsSync(fontPath)).to.be.false;
+			const fontUrl = await downloadSymbolsFontFromStyleSheet(stylesheet, {
+				filepath: fontPath,
+			});
+			expect(fontUrl).to.equal(
+				'https://fonts.gstatic.com/s/materialsymbolsoutlined/v156/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2'
+			);
+			expect(existsSync(fontPath)).to.be.true;
+
+			await rm(fontPath);
+		});
 	});
 });

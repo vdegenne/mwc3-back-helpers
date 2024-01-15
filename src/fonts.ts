@@ -1,7 +1,7 @@
 import {Variant} from './md-icons.js';
 import {existsSync} from 'node:fs';
 import {readFile, writeFile} from 'node:fs/promises';
-import {join} from 'node:path';
+import {join, dirname} from 'node:path';
 import {mkdir} from './utils.js';
 import type {CodePoint} from './codepoints-maps.js';
 
@@ -23,8 +23,8 @@ export async function fetchRawCodepointDocument(variant: Variant) {
 	const _family: FontFamilyValue = FontFamilies[variant];
 	const family = _family.replaceAll('+', '');
 	const url = `https://raw.githubusercontent.com/google/material-design-icons/master/variablefont/${family}%5BFILL%2CGRAD%2Copsz%2Cwght%5D.codepoints`;
-	const res = await fetch(url);
-	const text = await res.text();
+	const response = await fetch(url);
+	const text = await response.text();
 	return text;
 }
 
@@ -171,8 +171,131 @@ export function constructSymbolsFontStyleSheetUrl(
 	return `https://fonts.googleapis.com/css2?family=${family}:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200${text}`;
 }
 
-export function downloadSymbolsFontStyleSheet() {}
+export async function fetchSymbolsFontStyleSheet(
+	variant: Variant,
+	codepoints: CodePoint[]
+) {
+	const options = {
+		method: 'GET',
+		headers: {
+			'User-Agent':
+				'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36', // Mimic a Chrome browser user agent
+			'Accept-Language': 'en-US,en;q=0.9',
+		},
+	};
+	try {
+		const response = await fetch(
+			constructSymbolsFontStyleSheetUrl(variant, codepoints),
+			options
+		);
+		return await response.text();
+	} catch (error: any) {
+		throw new Error(
+			`Something went wrong while trying to fetch Material Symbols stylesheet (error: ${error.message})`
+		);
+	}
+}
+
+export async function downloadSymbolsFontStyleSheet(
+	variant: Variant,
+	codepoints: CodePoint[],
+	options: {
+		/**
+		 * The filepath where to save the Stylesheet
+		 *
+		 * @default '.mdicon/material-symbols.css'
+		 */
+		filepath: string;
+	} = {
+		filepath: '.mdicon/material-symbols.css',
+	}
+) {
+	try {
+		const text = await fetchSymbolsFontStyleSheet(variant, codepoints);
+		// Make sure the dirname exists
+		const dirpath = dirname(options.filepath);
+		if (!existsSync(dirpath)) {
+			await mkdir(dirpath);
+		}
+		await writeFile(options.filepath, text);
+		return text;
+	} catch (error: any) {
+		throw new Error(
+			`Something went wrong while trying to download Material Symbols Stylesheet (error: ${error.message})`
+		);
+	}
+}
+
+/**
+ * Attempts to load stylesheet locally first,
+ * downloads remotely, saves, returns otherwise
+ */
+export async function loadOrDownloadSymbolsFontStyleSheet(
+	filepath: string,
+	variant: Variant,
+	codepoints: CodePoint[]
+) {
+	let downloaded = false;
+	let stylesheet: string | undefined;
+	if (existsSync(filepath)) {
+		stylesheet = (await readFile(filepath)).toString();
+	} else {
+		stylesheet = await downloadSymbolsFontStyleSheet(variant, codepoints, {
+			filepath,
+		});
+		downloaded = true;
+	}
+	return {
+		downloaded,
+		stylesheet,
+	};
+}
 
 export function extractSymbolsFontUrlFromStyleSheet(stylesheet: string) {
-	// Should use a regexp to extract the fonts url
+	const regex = /url\(([^)]+)\)/;
+	const match = stylesheet.match(regex);
+	return match?.[1];
+}
+
+export function replaceSymbolsFontUrlInStyleSheet(
+	stylesheet: string,
+	replaceWith: string
+) {
+	const regex = /url\(([^)]+)\)/;
+	return stylesheet.replace(regex, (_, _url) => {
+		return `url(${replaceWith})`;
+	});
+}
+
+export async function downloadSymbolsFontFromStyleSheet(
+	stylesheet: string,
+	options: {
+		/**
+		 * Filepath to where to save the font file.
+		 *
+		 * @default '.mdicon/material-symbols.woff2'
+		 */
+		filepath: string;
+	} = {
+		filepath: '.mdicon/material-symbols.woff2',
+	}
+) {
+	const fontUrl = extractSymbolsFontUrlFromStyleSheet(stylesheet);
+	if (fontUrl == undefined) {
+		throw new Error(
+			"The font url couldn't be determined from the provided stylesheet."
+		);
+	}
+	try {
+		const response = await fetch(fontUrl);
+		await writeFile(
+			options.filepath,
+			Buffer.from(await response.arrayBuffer())
+		);
+		return fontUrl;
+	} catch (error: any) {
+		throw new Error(
+			`Something went wrong while trying to save font file (error: ${error.message})`
+		);
+	}
 }

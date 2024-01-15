@@ -102,7 +102,7 @@
 				"./scripts/generate-codepoint-docs.ts"
 			],
 			"output": [
-				".mdicon"
+				"./.mdicon/*.codepoints"
 			]
 		},
 		"test": {
