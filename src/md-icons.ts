@@ -1,4 +1,4 @@
-import {CodePointsMap, MdIconName} from './codepoints-maps.js';
+import {CodePoint, CodePointsMap, MdIconName} from './codepoints-maps.js';
 import type {CodePointsMapType} from './fonts.js';
 import {MD_ICON_REGEX, matchAllFromContent} from './regexps.js';
 import {stripCommentsFromContent} from './utils.js';
@@ -96,8 +96,8 @@ export async function findIconNamesFromFiles(
 export function convertIconNamesToCodePoints(
 	names: MdIconName[],
 	codePointsMap: CodePointsMapType = CodePointsMap
-) {
-	return names.map((name) => codePointsMap[name]);
+): CodePoint[] {
+	return names.map((name) => codePointsMap[name]) as CodePoint[];
 }
 
 export function replaceIconNamesWithCodePoints(
