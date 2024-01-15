@@ -31,7 +31,7 @@ async function main() {
 	await writeFile(
 		join('src', 'md-elements-imports-map.ts'),
 		`
-export const MdElementsImportsMap = ${stringified} as const;
+export const MdElementsImportsMap = ${stringified};
 /** all available md-* element */
 export type MdElement = keyof typeof MdElementsImportsMap;
 `.trim() + '\n'

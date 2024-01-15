@@ -25,11 +25,11 @@ async function main() {
 	await writeFile(
 		join('src', 'codepoints-maps.ts'),
 		`
-export const OutlinedCodePointsMap = ${outlinedCodePointsMap} as const;
-export const RoundedCodePointsMap = ${roundedCodePointsMap} as const;
-export const SharpCodePointsMap = ${sharpCodePointsMap} as const;
+export const OutlinedCodePointsMap = ${outlinedCodePointsMap};
+export const RoundedCodePointsMap = ${roundedCodePointsMap};
+export const SharpCodePointsMap = ${sharpCodePointsMap};
 /** General code points map */
-export const CodePointsMap = ${outlinedCodePointsMap} as const;
+export const CodePointsMap = ${outlinedCodePointsMap};
 export type MdIconName = keyof typeof CodePointsMap;
 export type CodePoint =
 	| (typeof OutlinedCodePointsMap)[keyof typeof OutlinedCodePointsMap]
