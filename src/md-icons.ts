@@ -93,6 +93,13 @@ export async function findIconNamesFromFiles(
 	return [...new Set(names.flat())] as MdIconName[];
 }
 
+export function convertIconNamesToCodePoints(
+	names: MdIconName[],
+	codePointsMap: CodePointsMapType = CodePointsMap
+) {
+	return names.map((name) => codePointsMap[name]);
+}
+
 export function replaceIconNamesWithCodePoints(
 	content: string,
 	codePointsMap: CodePointsMapType,
