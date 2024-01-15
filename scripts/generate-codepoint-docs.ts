@@ -5,7 +5,7 @@
 import {
 	createCodePointsMapFromDocument,
 	loadOrDownloadCodePointDocuments,
-} from '../src/fonts.js';
+} from './codepoints-docs.js';
 import {writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 

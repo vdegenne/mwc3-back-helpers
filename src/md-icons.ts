@@ -1,4 +1,8 @@
-import {CodePoint, CodePointsMap, MdIconName} from './codepoints-maps.js';
+import {
+	type CodePoint,
+	CodePointsMap,
+	type MdIconName,
+} from './codepoints-maps.js';
 import type {CodePointsMapType} from './fonts.js';
 import {MD_ICON_REGEX, matchAllFromContent} from './regexps.js';
 import {stripCommentsFromContent} from './utils.js';
