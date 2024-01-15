@@ -18,7 +18,7 @@ export type VariantValue = keyof typeof Variant;
  * Take a list of icon names and return a filtered array
  * keeping only icon names known to the library.
  */
-export function pruneFakeIconNames(names: string[]) {
+export function pruneFakeIconNames(names: string[]): MdIconName[] {
 	const availableNames = Object.keys(CodePointsMap);
 	return names.filter((el) => availableNames.includes(el)) as MdIconName[];
 }
@@ -33,7 +33,7 @@ export function pruneFakeIconNames(names: string[]) {
 export function findIconNamesFromContent(
 	content: string,
 	includeComments = false
-) {
+): MdIconName[] {
 	const namesSet = new Set<any>();
 
 	const matches = matchAllFromContent(content, MD_ICON_REGEX, includeComments);
@@ -75,7 +75,7 @@ export async function findIconNamesFromFile(
 export async function findIconNamesFromFiles(
 	filepaths: string[],
 	includeComments = false
-) {
+): Promise<MdIconName[]> {
 	const names = await Promise.all(
 		filepaths.map(
 			(filepath) =>

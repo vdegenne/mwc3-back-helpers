@@ -9,7 +9,7 @@ export {MdElementsImportsMap, MD_ELEMENT_REGEX};
  * Take a list of element names and return a filtered array
  * keeping only md-* elements that exist in the library.
  */
-export function pruneFakeElements(elements: string[]) {
+export function pruneFakeElements(elements: string[]): MdElement[] {
 	const availableElements = Object.keys(MdElementsImportsMap);
 	return elements.filter((el) => availableElements.includes(el)) as MdElement[];
 }
@@ -24,7 +24,7 @@ export function pruneFakeElements(elements: string[]) {
 export function findElementsFromContent(
 	content: string,
 	includeComments = false
-) {
+): MdElement[] {
 	const elementsSet = new Set<any>();
 
 	const matches = matchAllFromContent(
@@ -58,6 +58,7 @@ export async function findElementsFromFile(
 	const content = (await readFile(filepath)).toString();
 	return findElementsFromContent(content, includeComments);
 }
+
 /**
  * Takes an array of files and returns all existing md-* elements found inside the
  * corresponding files.
@@ -69,7 +70,7 @@ export async function findElementsFromFile(
 export async function findElementsFromFiles(
 	filepaths: string[],
 	includeComments = false
-) {
+): Promise<MdElement[]> {
 	const elements = await Promise.all(
 		filepaths.map(
 			(filepath) =>

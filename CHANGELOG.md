@@ -1,5 +1,11 @@
 # mwc3-back-helpers
 
+## 0.3.1
+
+### Patch Changes
+
+- Explicit returned types to avoid verbatim declarations
+
 ## 0.3.0
 
 ### Minor Changes
