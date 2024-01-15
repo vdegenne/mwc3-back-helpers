@@ -1,7 +1,7 @@
 {
 	"name": "mwc3-back-helpers",
 	"description": "Subset of modules to help building tools around MWC framework.",
-	"version": "0.0.3",
+	"version": "0.2.0",
 	"type": "module",
 	"main": "./lib/index.js",
 	"module": "./lib/index.js",
