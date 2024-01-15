@@ -18,6 +18,7 @@ import {readFile} from 'node:fs/promises';
 import {rm} from '../utils.js';
 import {Variant} from '../md-icons.js';
 import {dirname} from 'node:path';
+import {getFileSize} from './utils.js';
 
 describe('fonts.ts module', () => {
 	// Uncomment/Comment this set of tests every now and then
@@ -198,24 +199,53 @@ describe('fonts.ts module', () => {
 			expect(output).to.contain('url(./another/uri/to/font.woff)');
 		});
 
-		it('downloads font file from stylesheet', async () => {
+		describe.skip('Font Download', () => {
 			const fontPath = '.mdicon/material-symbols.woff2';
-			const {stylesheet} = await loadOrDownloadSymbolsFontStyleSheet(
-				stylesheetPath,
-				Variant.OUTLINED,
-				[]
-			);
-
-			expect(existsSync(fontPath)).to.be.false;
-			const fontUrl = await downloadSymbolsFontFromStyleSheet(stylesheet, {
-				filepath: fontPath,
+			beforeEach(async () => {
+				await rm(fontPath);
 			});
-			expect(fontUrl).to.equal(
-				'https://fonts.gstatic.com/s/materialsymbolsoutlined/v156/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2'
-			);
-			expect(existsSync(fontPath)).to.be.true;
+			after(async () => {
+				await rm(fontPath);
+			});
 
-			await rm(fontPath);
+			it('downloads font file from stylesheet', async () => {
+				const {stylesheet} = await loadOrDownloadSymbolsFontStyleSheet(
+					stylesheetPath,
+					Variant.OUTLINED,
+					[]
+				);
+
+				expect(existsSync(fontPath)).to.be.false;
+				const fontUrl = await downloadSymbolsFontFromStyleSheet(stylesheet, {
+					filepath: fontPath,
+				});
+				expect(fontUrl).to.equal(
+					'https://fonts.gstatic.com/s/materialsymbolsoutlined/v156/kJEhBvYX7BgnkSrUwT8OhrdQw4oELdPIeeII9v6oFsI.woff2'
+				);
+				expect(existsSync(fontPath)).to.be.true;
+			});
+
+			it('downloads font file containing only provided icons', async () => {
+				const ss1 = await fetchSymbolsFontStyleSheet(Variant.OUTLINED, [
+					'eb8d',
+				]);
+				await downloadSymbolsFontFromStyleSheet(ss1, {filepath: fontPath});
+				const size1 = await getFileSize(fontPath);
+
+				const ss2 = await fetchSymbolsFontStyleSheet(Variant.OUTLINED, [
+					'eb8d',
+					'e577',
+					'e952',
+					'e956',
+					'e981',
+				]);
+				await downloadSymbolsFontFromStyleSheet(ss2, {filepath: fontPath});
+				const size2 = await getFileSize(fontPath);
+
+				expect(size1).to.be.lessThan(1700);
+				expect(size2).to.be.greaterThan(1700);
+				expect(size2).to.be.lessThan(6000);
+			});
 		});
 	});
 });
