@@ -1,5 +1,12 @@
 # mwc3-back-helpers
 
+## 0.3.0
+
+### Minor Changes
+
+- Added search icon names in file functions (in `md-icons.js`)
+- Prune fake icon names in search functions
+
 ## 0.2.0
 
 ### Minor Changes

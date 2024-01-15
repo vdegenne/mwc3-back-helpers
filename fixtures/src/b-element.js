@@ -1,5 +1,5 @@
 /*
-<md-icon></md-icon>
+<md-icon>10k</md-icon>
 
 
 <md-text-button>
@@ -12,7 +12,7 @@
 // <md-icon-button></md-icon-button>
 
 console.log(
-	`<md-icon>settings</md-icon>
+	`<md-icon>remove_red_eye</md-icon>
     <md-fab></md-fab>
 
 

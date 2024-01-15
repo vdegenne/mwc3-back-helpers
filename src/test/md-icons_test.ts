@@ -1,6 +1,7 @@
 import {expect} from 'chai';
 import {
 	findIconNamesFromContent,
+	findIconNamesFromFiles,
 	replaceIconNamesWithCodePoints,
 } from '../md-icons.js';
 import {CodePointsMap} from '../codepoints-maps.js';
@@ -12,6 +13,7 @@ describe('md-icons module', () => {
     <md-icon>settings</md-icon>
     <md-icon>settings</md-icon>
     <md-icon> remove_red_eye</md-icon>
+    <md-icon>fake_icon_name</md-icon>
     <md-icon>
           delete
     </md-icon>
@@ -20,11 +22,11 @@ describe('md-icons module', () => {
     >
     <md-icon @click=${() => doSomething()}> arrow_back </md-icon>
     // <md-icon>play_arrow</md-icon>
-    /** <md-icon>test</md-icon> */
-    <!-- <md-icon>asdf</md-icon> -->
+    /** <md-icon>10k</md-icon> */
+    <!-- <md-icon>refresh</md-icon> -->
+    <md-icon>another_fake_icon_name</md-icon>
 `;
 
-	// TODO: shouldn't return icon names that don't exist
 	it('extracts icon names from content', async () => {
 		const iconNames = findIconNamesFromContent(content);
 		expect(iconNames).to.deep.equal([
@@ -45,9 +47,15 @@ describe('md-icons module', () => {
 			'add',
 			'arrow_back',
 			'play_arrow',
-			'test',
-			'asdf',
+			'10k',
+			'refresh',
 		]);
+	});
+
+	it('prunes unknown icon names', async () => {
+		const iconNames = findIconNamesFromContent(content, true);
+		expect(iconNames).to.not.contain('fake_icon_name');
+		expect(iconNames).to.not.contain('another_fake_icon_name');
 	});
 
 	it('replaces icon names with codepoints', async () => {
@@ -130,5 +138,45 @@ describe('md-icons module', () => {
 <md-icon>&#xe5c4;</md-icon>
 `
 		);
+	});
+
+	describe('findIconNamesFromFiles', () => {
+		it("throws if some files don't exist", async () => {
+			let err: Error | undefined;
+			try {
+				await findIconNamesFromFiles(['non-existing-file']);
+			} catch (error: any) {
+				err = error as Error;
+			}
+
+			expect(err).to.be.an('error');
+			expect(err!.message).to.contain('ENOENT');
+		});
+
+		it('returns icon names from files', async () => {
+			const elements = await findIconNamesFromFiles([
+				'./fixtures/src/a-element.js',
+				'./fixtures/src/b-element.js',
+			]);
+
+			expect(elements.length).to.equal(3);
+			expect(elements).to.deep.equal(['soap', 'delete', 'remove_red_eye']);
+		});
+
+		it('can analyze comments', async () => {
+			const elements = await findIconNamesFromFiles(
+				['./fixtures/src/a-element.js', './fixtures/src/b-element.js'],
+				true
+			);
+
+			expect(elements.length).to.equal(5);
+			expect(elements).to.deep.equal([
+				'soap',
+				'delete',
+				'add',
+				'10k',
+				'remove_red_eye',
+			]);
+		});
 	});
 });
