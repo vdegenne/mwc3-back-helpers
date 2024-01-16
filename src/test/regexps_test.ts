@@ -178,19 +178,31 @@ describe('MD_ICON_REGEX', () => {
 });
 
 describe('SYMBOLS_STYLESHEET_LINK_REGEX', () => {
-	it('detects link tag', () => {
-		const html = `
-          <!doctype html>
-          <html>
-            <head>
-              <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">
-            </head>
-          </html>
-          `;
+	it('matches link tags', async () => {
+		let input = 'will not match';
+		let match = input.match(SYMBOLS_STYLESHEET_LINK_REGEX)!;
+		expect(match).to.be.null;
 
-		const match = html.match(SYMBOLS_STYLESHEET_LINK_REGEX)!;
-		expect(match[0]).to.equal(
-			'<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">'
-		);
+		input =
+			'<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">';
+		match = input.match(SYMBOLS_STYLESHEET_LINK_REGEX)!;
+		expect(match[0]).to.equal(input);
+
+		input =
+			'    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">  ';
+		match = input.match(SYMBOLS_STYLESHEET_LINK_REGEX)!;
+		expect(match[0]).to.equal(input.trim());
+
+		// The link provided on the MWC doc
+		// <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+		input =
+			'<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">';
+		match = input.match(SYMBOLS_STYLESHEET_LINK_REGEX)!;
+		expect(match[0]).to.equal(input.trim());
+
+		input =
+			'<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet">';
+		match = input.match(SYMBOLS_STYLESHEET_LINK_REGEX)!;
+		expect(match[0]).to.equal(input.trim());
 	});
 });

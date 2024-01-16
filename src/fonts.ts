@@ -4,6 +4,10 @@ import {readFile, writeFile} from 'node:fs/promises';
 import {join, dirname} from 'node:path';
 import {mkdir} from './utils.js';
 import {type CodePoint} from './codepoints-maps.js';
+import {
+	MATERIAL_ALL_IMPORT_REGEX,
+	SYMBOLS_STYLESHEET_LINK_REGEX,
+} from './regexps.js';
 
 export type CodePointsMapType = {[iconName: string]: string};
 
@@ -267,6 +271,9 @@ export function replaceSymbolsFontUrlInStyleSheet(
 	});
 }
 
+/**
+ * @returns Font URL
+ */
 export async function downloadSymbolsFontFromStyleSheet(
 	stylesheet: string,
 	options: {
@@ -298,4 +305,15 @@ export async function downloadSymbolsFontFromStyleSheet(
 			`Something went wrong while trying to save font file (error: ${error.message})`
 		);
 	}
+}
+
+export function replaceMaterialSymbolsLinkInHtml(
+	html: string,
+	replaceWith: string
+) {
+	return html.replace(SYMBOLS_STYLESHEET_LINK_REGEX, replaceWith);
+}
+
+export function removeMaterialSymbolsLinkFromHtml(html: string) {
+	return html.replace(SYMBOLS_STYLESHEET_LINK_REGEX, '');
 }

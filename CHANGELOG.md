@@ -1,5 +1,11 @@
 # mwc3-back-helpers
 
+## 0.4.0
+
+### Minor Changes
+
+- Added Material Symbols link tag html transformation helpers
+
 ## 0.3.3
 
 ### Patch Changes

@@ -1,23 +1,24 @@
 import {expect} from 'chai';
-import {
-	codePointDocumentExists,
-	downloadCodePointDocuments,
-	loadOrDownloadCodePointDocuments,
-	fetchAllRawCodePointDocuments,
-	createCodePointsMapFromDocument,
-	constructSymbolsFontStyleSheetUrl,
-	downloadSymbolsFontStyleSheet,
-	fetchSymbolsFontStyleSheet,
-	loadOrDownloadSymbolsFontStyleSheet,
-	extractSymbolsFontUrlFromStyleSheet,
-	replaceSymbolsFontUrlInStyleSheet,
-	downloadSymbolsFontFromStyleSheet,
-} from '../fonts.js';
 import {existsSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
-import {rm} from '../utils.js';
+import {
+	codePointDocumentExists,
+	constructSymbolsFontStyleSheetUrl,
+	createCodePointsMapFromDocument,
+	downloadCodePointDocuments,
+	downloadSymbolsFontFromStyleSheet,
+	downloadSymbolsFontStyleSheet,
+	extractSymbolsFontUrlFromStyleSheet,
+	fetchAllRawCodePointDocuments,
+	fetchSymbolsFontStyleSheet,
+	loadOrDownloadCodePointDocuments,
+	loadOrDownloadSymbolsFontStyleSheet,
+	removeMaterialSymbolsLinkFromHtml,
+	replaceMaterialSymbolsLinkInHtml,
+	replaceSymbolsFontUrlInStyleSheet,
+} from '../fonts.js';
 import {Variant} from '../md-icons.js';
-import {dirname} from 'node:path';
+import {rm} from '../utils.js';
 import {getFileSize} from './utils.js';
 
 describe('fonts.ts module', () => {
@@ -122,7 +123,7 @@ describe('fonts.ts module', () => {
 		);
 	});
 
-	describe('Material Symbols Stylesheet', () => {
+	describe('Material Symbols Stylesheet/Font helpers', () => {
 		const stylesheetPath = '.mdicon/material-symbols.css';
 
 		describe.skip('Pre-fetching', () => {
@@ -246,6 +247,43 @@ describe('fonts.ts module', () => {
 				expect(size2).to.be.greaterThan(1700);
 				expect(size2).to.be.lessThan(6000);
 			});
+		});
+	});
+	describe('HTML transformation', () => {
+		const html = `
+    <!doctype html>
+    <html>
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">
+      </head>
+    </html>
+`;
+
+		it('replaces Material Symbols link', () => {
+			const output = replaceMaterialSymbolsLinkInHtml(
+				html,
+				'<link rel="stylesheet" href="./my/stylesheet.css">'
+			);
+			expect(output).to.equal(`
+    <!doctype html>
+    <html>
+      <head>
+        <link rel="stylesheet" href="./my/stylesheet.css">
+      </head>
+    </html>
+`);
+		});
+
+		it('removes Material Symbols link', async () => {
+			const output = removeMaterialSymbolsLinkFromHtml(html);
+			expect(output).to.equal(`
+    <!doctype html>
+    <html>
+      <head>
+        
+      </head>
+    </html>
+`);
 		});
 	});
 });
