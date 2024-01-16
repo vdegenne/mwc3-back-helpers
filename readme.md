@@ -1,12 +1,12 @@
 # mwc3-back-helpers
 
-Subset of modules to help building tools around the MWC framework.
+Suite of modules to help building tools around the MWC framework.
 
 ## Development
 
 #### Prerequisites
 
-The sources rely on the md-\* element imports map that needs to be generated beforehand,
+The sources rely on some data maps that need to be built prior to developement
 
 ```bash
 git clone https://github.com/vdegenne/mwc3-back-helpers.git
