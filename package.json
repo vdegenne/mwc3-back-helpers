@@ -1,7 +1,7 @@
 {
 	"name": "mwc3-back-helpers",
 	"description": "Suite of modules to help building tools around MWC framework.",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"type": "module",
 	"main": "./lib/index.js",
 	"module": "./lib/index.js",
@@ -64,13 +64,15 @@
 		"build": "wireit",
 		"build:imports-map": "wireit",
 		"build:codepoint-docs": "wireit",
+		"build:artifacts": "wireit",
 		"test": "wireit",
 		"prepublishOnly": "changeset version"
 	},
 	"wireit": {
 		"build": {
 			"dependencies": [
-				"build:ts"
+				"build:ts",
+				"build:artifacts"
 			]
 		},
 		"build:ts": {
@@ -112,10 +114,25 @@
 			"dependencies": [
 				"build"
 			]
+		},
+		"build:artifacts": {
+			"command": "node --import tsx/esm ./scripts/generate-full-icons-files.ts",
+			"#comment": "building typescript is not really needed but we need to wait",
+			"#commen_": "for some scripts to generate maps before proceeding.",
+			"dependencies": [
+				"build:ts"
+			],
+			"files": [
+				"./scripts/generate-full-icons-files.ts"
+			],
+			"output": [
+				"all-symbols"
+			]
 		}
 	},
 	"files": [
 		"/lib",
-		"!/lib/test"
+		"!/lib/test",
+		"/all-symbols"
 	]
 }

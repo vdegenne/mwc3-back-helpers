@@ -1,5 +1,11 @@
 # mwc3-back-helpers
 
+## 0.5.0
+
+### Minor Changes
+
+- Added fonts artifact for offline access
+
 ## 0.4.0
 
 ### Minor Changes

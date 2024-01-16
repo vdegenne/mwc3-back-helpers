@@ -261,6 +261,11 @@ export function extractSymbolsFontUrlFromStyleSheet(stylesheet: string) {
 	return match?.[1];
 }
 
+/**
+ * Replace the url entry inside the given stylesheet.
+ * This function is used when localizing a stylesheet and
+ * a font fetched remotely.
+ */
 export function replaceSymbolsFontUrlInStyleSheet(
 	stylesheet: string,
 	replaceWith: string
@@ -295,6 +300,7 @@ export async function downloadSymbolsFontFromStyleSheet(
 	}
 	try {
 		const response = await fetch(fontUrl);
+		await mkdir(dirname(options.filepath));
 		await writeFile(
 			options.filepath,
 			Buffer.from(await response.arrayBuffer())
