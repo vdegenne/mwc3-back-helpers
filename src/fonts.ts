@@ -1,13 +1,10 @@
-import {Variant} from './md-icons.js';
 import {existsSync} from 'node:fs';
 import {readFile, writeFile} from 'node:fs/promises';
-import {join, dirname} from 'node:path';
-import {mkdir} from './utils.js';
+import {dirname, join} from 'node:path';
 import {type CodePoint} from './codepoints-maps.js';
-import {
-	MATERIAL_ALL_IMPORT_REGEX,
-	SYMBOLS_STYLESHEET_LINK_REGEX,
-} from './regexps.js';
+import {Variant} from './md-icons.js';
+import {SYMBOLS_STYLESHEET_LINK_REGEX} from './regexps.js';
+import {mkdir} from './utils.js';
 
 export type CodePointsMapType = {[iconName: string]: string};
 
@@ -171,6 +168,9 @@ export function constructSymbolsFontStyleSheetUrl(
 	codepoints.forEach((codepoint) => {
 		text += encodeURIComponent(String.fromCharCode(parseInt(codepoint, 16)));
 	});
+
+	// TODO: if text is empty should return a global stylesheet or else it will
+	// weight 3MB...
 
 	return `https://fonts.googleapis.com/css2?family=${family}:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200${text}`;
 }

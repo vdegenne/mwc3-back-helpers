@@ -14,7 +14,18 @@ async function main() {
 	const allFileContent = await readFile(allFilePath);
 
 	// Process the elements imports Map
-	const imports = findImportsInContent(allFileContent.toString());
+	let imports = findImportsInContent(allFileContent.toString());
+
+	// Lab elements
+	imports = imports.concat([
+		'./labs/segmentedbuttonset/outlined-segmented-button-set.js',
+		'./labs/segmentedbutton/outlined-segmented-button.js',
+		'./labs/badge/badge.js',
+		'./labs/card/elevated-card.js',
+		'./labs/card/filled-card.js',
+		'./labs/card/outlined-card.js',
+	]);
+
 	const importsMap: ImportsMap = {};
 
 	const elementNameRegex = /\/([^/.]+)\.js/;

@@ -1,9 +1,8 @@
+import {readFile} from 'node:fs/promises';
 import {MdElement, MdElementsImportsMap} from './md-elements-imports-map.js';
 import {MD_ELEMENT_REGEX, matchAllFromContent} from './regexps.js';
-// import {existsSync} from 'node:fs';
-import {readFile} from 'node:fs/promises';
 
-export {MdElementsImportsMap, MD_ELEMENT_REGEX};
+export {MD_ELEMENT_REGEX, MdElementsImportsMap};
 
 /**
  * Take a list of element names and return a filtered array
