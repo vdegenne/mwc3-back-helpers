@@ -45,6 +45,10 @@
 			"import": "./lib/regexps.js",
 			"default": "./lib/regexps.js",
 			"types": "./lib/regexps.d.ts"
+		},
+		"./browser.js": {
+			"default": "./lib/browser.js",
+			"types": "./lib/browser.d.ts"
 		}
 	},
 	"devDependencies": {
