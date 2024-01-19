@@ -1,7 +1,7 @@
 {
 	"name": "mwc3-back-helpers",
 	"description": "Suite of modules to help building tools around MWC framework.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"type": "module",
 	"main": "./lib/index.js",
 	"module": "./lib/index.js",
@@ -36,8 +36,11 @@
 			"default": "./lib/codepoints-maps.js",
 			"types": "./lib/codepoints-maps.d.ts"
 		},
+		"./stylesheet.js": {
+			"default": "./lib/stylesheet/stylesheet.js",
+			"types": "./lib/stylesheet/stylesheet.d.ts"
+		},
 		"./fonts.js": {
-			"import": "./lib/fonts.js",
 			"default": "./lib/fonts.js",
 			"types": "./lib/fonts.d.ts"
 		},
