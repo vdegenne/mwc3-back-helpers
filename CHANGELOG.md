@@ -1,5 +1,18 @@
 # mwc3-back-helpers
 
+## 1.0.0
+
+### Major Changes
+
+- Change general stylesheet url to minimize the size of the font even more.
+- Isolated stylesheet helpers in its own module
+
+## 0.6.0
+
+### Minor Changes
+
+- 1e163ad: Add `browser.js` module
+
 ## 0.5.1
 
 ### Patch Changes

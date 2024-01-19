@@ -6,12 +6,9 @@
  * and `generate-imports-map.ts` because it depends on objects
  * produced by these two.
  */
-import {mkdir} from 'fs/promises';
-import {
-	downloadSymbolsFontFromStyleSheet,
-	replaceSymbolsFontUrlInStyleSheet,
-} from '../src/fonts.js';
 import {writeFile} from 'fs/promises';
+import {downloadSymbolsFontFromStyleSheet} from '../src/fonts.js';
+import {replaceSymbolsFontUrlInStyleSheet} from '../src/stylesheet/stylesheet.ts';
 
 /** stylesheet to download */
 const url =

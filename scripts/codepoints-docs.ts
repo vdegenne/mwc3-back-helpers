@@ -7,7 +7,7 @@
  */
 import {existsSync} from 'node:fs';
 import {readFile, writeFile} from 'node:fs/promises';
-import {join, dirname} from 'node:path';
+import {join} from 'node:path';
 import {mkdir} from '../src/utils.js';
 
 export enum Variant {

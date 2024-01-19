@@ -3,23 +3,25 @@ import {existsSync} from 'node:fs';
 import {readFile} from 'node:fs/promises';
 import {
 	codePointDocumentExists,
-	constructSymbolsFontStyleSheetUrl,
 	createCodePointsMapFromDocument,
 	downloadCodePointDocuments,
 	downloadSymbolsFontFromStyleSheet,
-	downloadSymbolsFontStyleSheet,
-	extractSymbolsFontUrlFromStyleSheet,
 	fetchAllRawCodePointDocuments,
-	fetchSymbolsFontStyleSheet,
 	loadOrDownloadCodePointDocuments,
-	loadOrDownloadSymbolsFontStyleSheet,
 	removeMaterialSymbolsLinkFromHtml,
 	replaceMaterialSymbolsLinkInHtml,
-	replaceSymbolsFontUrlInStyleSheet,
 } from '../fonts.js';
 import {Variant} from '../md-icons.js';
 import {rm} from '../utils.js';
 import {getFileSize} from './utils.js';
+import {
+	constructSymbolsFontStyleSheetUrl,
+	downloadSymbolsFontStyleSheet,
+	extractSymbolsFontUrlFromStyleSheet,
+	fetchSymbolsFontStyleSheet,
+	loadOrDownloadSymbolsFontStyleSheet,
+	replaceSymbolsFontUrlInStyleSheet,
+} from '../stylesheet/stylesheet.js';
 
 describe('fonts.ts module', () => {
 	// Uncomment/Comment this set of tests every now and then
@@ -110,7 +112,7 @@ describe('fonts.ts module', () => {
 	it('constructs symbols font stylesheet url', () => {
 		let url = constructSymbolsFontStyleSheetUrl(Variant.OUTLINED, ['efd1']);
 		expect(url).to.equal(
-			'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&text=%EE%BF%91'
+			'https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined&text=%EE%BF%91'
 		);
 
 		url = constructSymbolsFontStyleSheetUrl(Variant.SHARP, [
@@ -119,7 +121,7 @@ describe('fonts.ts module', () => {
 			'e8cd',
 		]);
 		expect(url).to.equal(
-			'https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&text=%EE%9C%9C%EF%A2%88%EE%A3%8D'
+			'https://fonts.googleapis.com/icon?family=Material+Symbols+Sharp&text=%EE%9C%9C%EF%A2%88%EE%A3%8D'
 		);
 	});
 
@@ -254,7 +256,7 @@ describe('fonts.ts module', () => {
     <!doctype html>
     <html>
       <head>
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
       </head>
     </html>
 `;

@@ -1,7 +1,7 @@
 import {existsSync} from 'node:fs';
-import {join} from 'node:path';
 import {readFile, writeFile} from 'node:fs/promises';
-import {findImportsInContent, type ImportsMap} from '../src/imports.ts';
+import {join} from 'node:path';
+import {findImportsInContent, type ImportsMap} from '../src/utils.ts';
 
 const allFilePath = join('node_modules', '@material', 'web', 'all.js');
 
