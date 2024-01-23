@@ -3,13 +3,12 @@
  * The stylesheet contains a Material Symbols font file used to display
  * icons in `<md-icon>` element.
  */
-
-import {type CodePoint} from '../codepoints-maps.js';
-import {type Variant} from '../md-icons.js';
-import {FontFamilies} from '../fonts.js';
-import {dirname} from 'node:path';
 import {existsSync} from 'node:fs';
 import {readFile, writeFile} from 'node:fs/promises';
+import {dirname} from 'node:path';
+import {type CodePoint} from '../codepoints-maps.js';
+import {FontFamilies} from '../fonts.js';
+import {type Variant} from '../md-icons.js';
 import {mkdir} from '../utils.js';
 
 /**

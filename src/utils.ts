@@ -1,17 +1,20 @@
 import {mkdir as _mkdir, rm as _rm} from 'node:fs/promises';
 
 export function stripCommentsFromContent(content: string): string {
-	const pattern = /\/\/.*|\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->/g;
+	const pattern = /(?<!:)\/\/.*|\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->/g;
 	return content.replace(pattern, '');
 }
 
 export async function mkdir(dirpath: string) {
 	try {
 		await _mkdir(dirpath, {recursive: true});
-	} catch (error) {
-		console.error(
-			`Something went wrong trying to make directory "${dirpath}" (error: ${error})`
-		);
+	} catch (error: any) {
+		if (error.code === 'EEXIST') {
+		} else {
+			console.error(
+				`Something went wrong trying to make directory "${dirpath}" (error: ${error})`
+			);
+		}
 	}
 }
 

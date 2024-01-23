@@ -1,5 +1,11 @@
 # mwc3-back-helpers
 
+## 1.0.2
+
+### Patch Changes
+
+- Fix includeComments false broken urls issue
+
 ## 1.0.0
 
 ### Major Changes

@@ -5,6 +5,7 @@ import {
 	replaceIconNamesWithCodePoints,
 } from '../md-icons.js';
 import {CodePointsMap} from '../codepoints-maps.js';
+import {readFile} from 'node:fs/promises';
 
 describe('md-icons module', () => {
 	const doSomething = () => {};
@@ -58,38 +59,39 @@ describe('md-icons module', () => {
 		expect(iconNames).to.not.contain('another_fake_icon_name');
 	});
 
-	it('replaces icon names with codepoints', async () => {
-		const map = CodePointsMap;
+	describe('Icon names replacement', () => {
+		it('replaces icon names with codepoints', async () => {
+			const map = CodePointsMap;
 
-		let content = '<md-icon>10k</md-icon>';
-		let result = replaceIconNamesWithCodePoints(content, map);
-		expect(result).to.equal('<md-icon>&#xe951;</md-icon>');
+			let content = '<md-icon>10k</md-icon>';
+			let result = replaceIconNamesWithCodePoints(content, map);
+			expect(result).to.equal('<md-icon>&#xe951;</md-icon>');
 
-		content = '<md-icon>unknown_name</md-icon>';
-		result = replaceIconNamesWithCodePoints(content, map);
-		expect(result).to.equal('<md-icon>unknown_name</md-icon>');
+			content = '<md-icon>unknown_name</md-icon>';
+			result = replaceIconNamesWithCodePoints(content, map);
+			expect(result).to.equal('<md-icon>unknown_name</md-icon>');
 
-		content = '<md-icon>settings</md-icon><md-icon>delete</md-icon>';
-		result = replaceIconNamesWithCodePoints(content, map);
-		expect(result).to.equal(
-			'<md-icon>&#xe8b8;</md-icon><md-icon>&#xe92e;</md-icon>'
-		);
+			content = '<md-icon>settings</md-icon><md-icon>delete</md-icon>';
+			result = replaceIconNamesWithCodePoints(content, map);
+			expect(result).to.equal(
+				'<md-icon>&#xe8b8;</md-icon><md-icon>&#xe92e;</md-icon>'
+			);
 
-		content = `
+			content = `
 <md-icon>  settings</md-icon>
 <md-icon
 >  delete    </md-icon
 >`;
-		result = replaceIconNamesWithCodePoints(content, map);
-		expect(result).to.equal(
-			`
+			result = replaceIconNamesWithCodePoints(content, map);
+			expect(result).to.equal(
+				`
 <md-icon>&#xe8b8;</md-icon>
 <md-icon
 >&#xe92e;</md-icon
 >`
-		);
+			);
 
-		content = `
+			content = `
 <md-icon>  settings</md-icon>
 // <md-icon>remove_red_eyes</md-icon>
 <md-icon>  delete    </md-icon>
@@ -103,10 +105,10 @@ describe('md-icons module', () => {
 <!-- <md-icon>non_existing_name</md-icon> -->
 <md-icon>arrow_back</md-icon>
 `;
-		result = replaceIconNamesWithCodePoints(content, map);
+			result = replaceIconNamesWithCodePoints(content, map);
 
-		expect(result).to.equal(
-			`
+			expect(result).to.equal(
+				`
 <md-icon>&#xe8b8;</md-icon>
 
 <md-icon>&#xe92e;</md-icon>
@@ -118,12 +120,12 @@ describe('md-icons module', () => {
 
 <md-icon>&#xe5c4;</md-icon>
 `
-		);
+			);
 
-		result = replaceIconNamesWithCodePoints(content, map, true);
+			result = replaceIconNamesWithCodePoints(content, map, true);
 
-		expect(result).to.equal(
-			`
+			expect(result).to.equal(
+				`
 <md-icon>&#xe8b8;</md-icon>
 // <md-icon>remove_red_eyes</md-icon>
 <md-icon>&#xe92e;</md-icon>
@@ -137,7 +139,14 @@ describe('md-icons module', () => {
 <!-- <md-icon>non_existing_name</md-icon> -->
 <md-icon>&#xe5c4;</md-icon>
 `
-		);
+			);
+		});
+
+		it("doesn't weirdly break urls.", async () => {
+			const content = 'https://example.com/test/path/resource.js';
+			const result = replaceIconNamesWithCodePoints(content, CodePointsMap);
+			expect(result).to.equal(content);
+		});
 	});
 
 	describe('findIconNamesFromFiles', () => {

@@ -115,7 +115,7 @@ export function replaceIconNamesWithCodePoints(
 		content = stripCommentsFromContent(content);
 	}
 
-	content = content.replaceAll(regexp, (_, opening, name, closing) => {
+	content = content.replace(regexp, (_, opening, name, closing) => {
 		const codepoint = codePointsMap[name];
 		return `${opening}${codepoint ? `&#x${codepoint};` : name}${closing}`;
 	});
