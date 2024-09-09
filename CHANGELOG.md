@@ -1,5 +1,11 @@
 # mwc3-back-helpers
 
+## 1.0.3
+
+### Patch Changes
+
+- Update stylesheet from icon (deprecated) to symbol
+
 ## 1.0.2
 
 ### Patch Changes

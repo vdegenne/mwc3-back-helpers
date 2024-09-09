@@ -1,11 +1,10 @@
 import {expect} from 'chai';
+import {CodePointsMap} from '../codepoints-maps.js';
 import {
 	findIconNamesFromContent,
 	findIconNamesFromFiles,
 	replaceIconNamesWithCodePoints,
 } from '../md-icons.js';
-import {CodePointsMap} from '../codepoints-maps.js';
-import {readFile} from 'node:fs/promises';
 
 describe('md-icons module', () => {
 	const doSomething = () => {};
@@ -142,7 +141,7 @@ describe('md-icons module', () => {
 			);
 		});
 
-		it("doesn't weirdly break urls.", async () => {
+		it("includeComments 'false' doesn't break urls.", async () => {
 			const content = 'https://example.com/test/path/resource.js';
 			const result = replaceIconNamesWithCodePoints(content, CodePointsMap);
 			expect(result).to.equal(content);

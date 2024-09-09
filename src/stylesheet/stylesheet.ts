@@ -29,9 +29,9 @@ export function constructSymbolsFontStyleSheetUrl(
 		text += encodeURIComponent(String.fromCharCode(parseInt(codepoint, 16)));
 	});
 
-	return `https://fonts.googleapis.com/icon?family=${family}${text}`;
 	// Following link kept for historical reason
-	// return `https://fonts.googleapis.com/css2?family=${family}:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200${text}`;
+	// return `https://fonts.googleapis.com/icon?family=${family}${text}`;
+	return `https://fonts.googleapis.com/css2?family=${family}:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200${text}`;
 }
 
 export async function fetchSymbolsFontStyleSheet(
