@@ -240,7 +240,6 @@ describe('fonts.ts module', () => {
 					'e577',
 					'e952',
 					'e956',
-					'e981',
 				]);
 				await downloadSymbolsFontFromStyleSheet(ss2, {filepath: fontPath});
 				const size2 = await getFileSize(fontPath);
