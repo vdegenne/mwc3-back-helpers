@@ -31,10 +31,11 @@ async function main() {
 	const elementNameRegex = /\/([^/.]+)\.js/;
 	for (const importee of imports) {
 		const elementNameMatch = importee.match(elementNameRegex)!;
-		importsMap[`md-${elementNameMatch[1]}`] = importee.replace(
-			/^\./,
-			'@material/web'
-		);
+		let name = elementNameMatch[1];
+		if (name !== 'md-focus-ring') {
+			name = `md-${name}`;
+		}
+		importsMap[name] = importee.replace(/^\./, '@material/web');
 	}
 
 	const stringified = JSON.stringify(importsMap, null, 2);

@@ -55,17 +55,17 @@
 		}
 	},
 	"devDependencies": {
-		"@changesets/cli": "^2.27.1",
-		"@material/web": "^1.1.1",
-		"@types/chai": "^4.3.11",
-		"@types/mocha": "^10.0.6",
-		"@types/node": "^20.11.0",
-		"chai": "^5.0.0",
-		"mocha": "^10.2.0",
-		"tsx": "^4.7.0",
-		"typedoc": "^0.25.7",
-		"typescript": "^5.3.3",
-		"wireit": "^0.14.3"
+		"@changesets/cli": "^2.29.7",
+		"@material/web": "^2.4.1",
+		"@types/chai": "^5.2.3",
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^24.9.2",
+		"chai": "^6.2.0",
+		"mocha": "^11.7.4",
+		"tsx": "^4.20.6",
+		"typedoc": "^0.28.14",
+		"typescript": "^5.9.3",
+		"wireit": "^0.14.12"
 	},
 	"scripts": {
 		"build": "wireit",
@@ -91,16 +91,16 @@
 			"clean": "if-file-deleted",
 			"files": [
 				"tsconfig.json",
-				"src"
+				"./src/"
 			],
 			"output": [
-				"lib"
+				"./lib/"
 			]
 		},
 		"build:imports-map": {
 			"command": "node --import tsx/esm ./scripts/generate-imports-map.ts",
 			"files": [
-				"./scripts/generate-imports-map.js"
+				"./scripts/generate-imports-map.ts"
 			],
 			"output": [
 				"./src/md-elements-imports-map.ts"
