@@ -24,6 +24,7 @@ async function main() {
 		'./labs/card/elevated-card.js',
 		'./labs/card/filled-card.js',
 		'./labs/card/outlined-card.js',
+		'./labs/item/item.js',
 	]);
 
 	const importsMap: ImportsMap = {};
